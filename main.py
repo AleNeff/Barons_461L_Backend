@@ -1,5 +1,5 @@
 # import users
-from .app import users
+from app import users
 from typing import Optional
 from fastapi import FastAPI
 from pydantic import BaseModel
