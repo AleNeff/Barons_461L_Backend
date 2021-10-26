@@ -2,7 +2,6 @@
 from app import users
 from typing import Optional
 from fastapi import FastAPI
-from fastapi.middleware import Middleware
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
