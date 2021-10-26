@@ -12,11 +12,10 @@ class hardwareSet():
     capacity: int 
     availability: int
     requests: int = 0
-    def __init__(self, name, capacity, availability, requests):
+    def __init__(self, name):
         self.name = name
         self.capacity = 200
         self.availability = 200
-        self.requests = requests
     def create_sets(self):
         initialize_HardwareSets(self.capacity)
 def initialize_HardwareSets(capacity):
@@ -48,33 +47,40 @@ def get_HWSet(name):
     hwSet_json = json.dumps(hwSet, indent=4, default=json_util.default)
     return hwSet_json
 
-def checkout(name, count):
+def checkout(self,name, count):
     search = {"Name": name}
     self.availability -= count
     new_availability = {"$set" : {'Availability':self.availability}}
     set = setCollection.update_one(search, new_availability)
     return
 
-def check_in(name, count):
+def check_in(self,name, count):
     search = {"Name": name}
     self.availability += count
     new_availability = {"$set" : {'Availability':self.availability}}
     set = setCollection.update_one(search, new_availability)
     return
 
-def update_capacity(name, count):
+def update_capacity(self, name, count):
     search = {"Name": name}
-    self.availability = count
+    self.availability = self.capacity - self.availability + count
     self.capacity = count
     new_capacity = {"$set":{'Capacity': count}}
     set = setCollection.update_one(search, new_capacity)
+    new_availability = {"$set" : {'Availability':self.availability}}
+    set = setCollection.update_one(search, new_availability)
     return
+
 def testing_functions():
+    x = hardwareSet(set)
     initialize_HardwareSets(200)
     hw_set = get_HWSet("Hardware Set 1")
     print(hw_set)
-    update_capacity("Hardware Set 1", 300)
+    update_capacity(x, "Hardware Set 1", 300)
+    checkout(x, "Hardware Set 1", 100)
+    check_in(x, "Hardware Set 1", 100)
     hw_set = get_HWSet("Hardware Set 1")
+    add_HardwareSets("Test", 400)
     print(hw_set)
-
+testing_functions()
 client.close()
