@@ -1,5 +1,8 @@
 # import users
 from app import users
+import json
+from bson import json_util
+from app.users import User, get_user_by_username
 from typing import Optional
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
@@ -40,15 +43,15 @@ def update_item(item_id: int, item: Item):
     return {"item_name": item.name, "item_id": item_id}
 
 @app.get("/user/")
-def show_user_profile(username):
+def get_user_profile(username):
     # if (username != any that we have in DB):
     #     username = "New User"
-    return {'User: %s' % (username)}
+    user = get_user_by_username(username)
+    return {user}
 
-@app.post("/user/new")
-def post_user():
-    new_user = users.User(123, "username", "password")
-    new_user.post_to_DB()
-    return {new_user}
+@app.post("/user/")
+async def create_user(user: User):
+    user.post_to_DB()
+    return {"ID": user.ID, "username": user.username, "password": user.password}
 
 # users.test_functions()
