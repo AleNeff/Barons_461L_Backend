@@ -100,4 +100,3 @@ async def remove_user(request: projects.GetAllProjectWithUserNameRequest):
     return projects.get_all_projects_with_username(request.user)
 
 # users.test_functions()
-print(get_all_users())
