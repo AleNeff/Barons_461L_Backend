@@ -190,3 +190,6 @@ class RemoveUserRequest(BaseModel):
     project_name: str
     user_name: str
 
+class GetAllProjectWithUserNameRequest(BaseModel):
+    user: str
+
