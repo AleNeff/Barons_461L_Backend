@@ -3,7 +3,7 @@ from app import users
 import json
 from bson import json_util
 from app import projects
-from app.users import User, get_user_by_username
+from app import users
 from typing import Optional
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
@@ -25,33 +25,22 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-class Item(BaseModel):
-    name: str
-    price: float
-    is_offer: Optional[bool] = None
-
 @app.get("/")
 def read_root():
     return {"Hello": "World"}
 
-
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: Optional[str] = None):
-    return {"item_id": item_id, "q": q}
-
-@app.put("/items/{item_id}")
-def update_item(item_id: int, item: Item):
-    return {"item_name": item.name, "item_id": item_id}
-
-@app.get("/user/")
-def get_user_profile(username):
-    # if (username != any that we have in DB):
-    #     username = "New User"
-    user = get_user_by_username(username)
+@app.get("/user/login")
+async def get_user_profile(username, password):
+    user = users.get_user_on_login(username, password)
     return {user}
 
-@app.post("/user/")
-async def create_user(user: User):
+@app.get("/user/get_all")
+def get_all_users():
+    user_list = users.get_all_users()
+    return user_list
+
+@app.post("/user/new_user")
+async def create_user(user: users.User):
     user.post_to_DB()
     return {"ID": user.ID, "username": user.username, "password": user.password}
 
@@ -111,3 +100,4 @@ async def remove_user(request: projects.GetAllProjectWithUserNameRequest):
     return projects.get_all_projects_with_username(request.user)
 
 # users.test_functions()
+print(get_all_users())
