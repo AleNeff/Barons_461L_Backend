@@ -42,10 +42,22 @@ def add_HardwareSets(name="", capacity=0):
     setCollection.insert_one(set)
     return
 
+def remove_HWset(name):
+    message = ""
+    if setCollection.find_one({"Name":name}) is not None:
+        hwSet = setCollection.find_one({"Name": name})
+        setCollection.delete_one(hwSet)
+        message = name + " has been successfully deleted"
+    else:
+        message = name + " does not exist"
+    return message
+
 def get_HWSet(name):
-    hwSet = setCollection.find_one({"Name": name})
-    hwSet_json = json.dumps(hwSet, indent=4, default=json_util.default)
-    return hwSet_json
+    if setCollection.find_one({"Name":name}) is not None:
+            hwSet = setCollection.find_one({"Name": name})
+            hwSet_json = json.dumps(hwSet, indent=4, default=json_util.default)
+            return hwSet_json
+
 
 def checkout(self,name, count):
     search = {"Name": name}
@@ -79,8 +91,10 @@ def testing_functions():
     update_capacity(x, "Hardware Set 1", 300)
     checkout(x, "Hardware Set 1", 100)
     check_in(x, "Hardware Set 1", 100)
-    hw_set = get_HWSet("Hardware Set 1")
+    hw_set = get_HWSet("Hardware Set")
     add_HardwareSets("Test", 400)
+    out = remove_HWset("Test")
+    print(out)
     print(hw_set)
 testing_functions()
 client.close()
