@@ -55,17 +55,17 @@ def create_project(name, description, id, owner):
     except DuplicateKeyError as e:
         return -1
 
-def delete_project_by_name(name):
+def delete_project_by_name(user, name):
     """Delete a project by project name (str)"""
     PROJECTS_COLLECTION.delete_one({"project_name": name})
 
-def delete_project_by_id(id):
+def delete_project_by_id(user, id):
     """Delete a project by project id (str)"""
     PROJECTS_COLLECTION.delete_one({"project_id": id})
 
-def check_out_hwset(project_name, hwset_name, amount_out):
+def check_out_hwset(user, project_name, hwset_name, amount_out):
     """
-    Check out hwset_amount (int) units of hardware from hwset_name (str) to project_name (str)
+    Check out amount_out (int) units of hardware from hwset_name (str) to project_name (str)
 
     Returns 0 for success or -1 for failure (insufficient availability / funds)
     """
@@ -87,9 +87,9 @@ def check_out_hwset(project_name, hwset_name, amount_out):
 
     #TODO: return 0 for success
 
-def check_in_hwset(project_name, hwset_name, amount_in):
+def check_in_hwset(user, project_name, hwset_name, amount_in):
     """
-    Check in hwset_amount (int) units of hardware to hwset_name (str) from project_name (str)
+    Check in amount_in (int) units of hardware to hwset_name (str) from project_name (str)
 
     Returns 0 for success or -1 for failure (checking in more than amount checked out)
     """
@@ -108,7 +108,7 @@ def check_in_hwset(project_name, hwset_name, amount_in):
 
     #TODO: return 0 for success
 
-def add_user(project_name, user_name):
+def add_user(user, project_name, user_name):
     """
     Add user with user_name (str) into project_name (str)
     """
@@ -123,7 +123,7 @@ def add_user(project_name, user_name):
         {"project_name": project_name}, 
         {"$set": {"users_list": project.users_list}})
 
-def remove_user(project_name, user_name):
+def remove_user(user, project_name, user_name):
     """
     Remove user with user_name (str) from project_name (str)
     """
@@ -140,25 +140,56 @@ def remove_user(project_name, user_name):
         {"project_name": project_name}, 
         {"$set": {"users_list": project.users_list}})
 
-def get_all_projects_with_username(user_name):
+def get_all_projects_with_username(user):
     """
-    Get all projects from MongoDB with username user_name (str)
+    Get all projects from MongoDB with username user (str)
     """
     all_project_list = PROJECTS_COLLECTION.find()
     result = []
     for potential_project in all_project_list:
         project = Project(**potential_project)
-        if user_name in project.users_list:
+        if user in project.users_list:
             result.append(project)
     return result
 
+# # # # # # # Request Body Models for FastAPI # # # # # # #
 
+class CreateProjectRequest(BaseModel):
+    project_name: str
+    project_description: str
+    project_id: str
+    project_owner: str
 
-# print(create_project("Project 5", "Description 0", "0005", "barons@gmail.com"))
-# delete_project_by_name("Project 5")
-# check_out_hwset("Project 4", "HWSet2", 10)
-# check_in_hwset("Project 4", "HWSet2", 10)
-# add_user("Project 4", "nghi@gmail.com")
-# remove_user("Project 4", "nghi@gmail.com")
-# get_all_projects_with_username("nghi@gmail.com")
+class DeleteProjectByNameRequest(BaseModel):
+    user: str
+    project_name: str
+
+class DeleteProjectByIdRequest(BaseModel):
+    user: str
+    project_id: str
+
+class CheckOutHwsetRequest(BaseModel):
+    user: str
+    project_name: str
+    hwset_name: str
+    amount_out: int
+
+class CheckInHwsetRequest(BaseModel):
+    user: str
+    project_name: str
+    hwset_name: str
+    amount_in: int
+
+class AddUserRequest(BaseModel):
+    user: str
+    project_name: str
+    user_name: str
+
+class RemoveUserRequest(BaseModel):
+    user: str
+    project_name: str
+    user_name: str
+
+class GetAllProjectWithUserNameRequest(BaseModel):
+    user: str
 
