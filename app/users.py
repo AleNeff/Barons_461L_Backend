@@ -3,6 +3,7 @@ import json
 from bson import json_util
 from .encryption import encrypt
 from pydantic import BaseModel
+import ssl
 
 # Current user model: ID, username, password
 #TODO: add error handling for bad connections etc.
@@ -11,7 +12,7 @@ ENCRYPT = 1
 DECRYPT = -1
 
 client = MongoClient(
-    'mongodb+srv://aneff:barons@cluster0.yrjds.mongodb.net/appDB?retryWrites=true&w=majority')
+    'mongodb+srv://aneff:barons@cluster0.yrjds.mongodb.net/appDB?retryWrites=true&w=majority',  ssl_cert_reqs=ssl.CERT_NONE)
 db = client.appDB
 users = db.users
 
