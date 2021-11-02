@@ -42,10 +42,10 @@ def get_user_on_login(username, password):
     user = users.find_one({"username": encrypted_user, "password": encrypted_pass})
     # if record invalid
     if user is None:
-        return({"message": "Invalid Login Info"})
+        return -1
     # set encrypted username back to decrypted version, same with pass
     user['username'] = username
-    user['password'] = encrypt(user['password'], N, DECRYPT)
+    user['password'] = password
     user_json = json.dumps(user, indent=4, default=json_util.default)
     return user_json
 
