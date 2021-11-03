@@ -96,7 +96,7 @@ async def remove_user(request: projects.RemoveUserRequest):
     )
 
 @app.get("/project/get_all")
-async def remove_user(request: projects.GetAllProjectWithUserNameRequest):
-    return projects.get_all_projects_with_username(request.user)
+async def get_all_projects_with_username(current_user):
+    return projects.get_all_projects_with_username(current_user)
 
 # users.test_functions()

@@ -161,35 +161,31 @@ class CreateProjectRequest(BaseModel):
     project_owner: str
 
 class DeleteProjectByNameRequest(BaseModel):
-    user: str
+    current_user: str
     project_name: str
 
 class DeleteProjectByIdRequest(BaseModel):
-    user: str
+    current_user: str
     project_id: str
 
 class CheckOutHwsetRequest(BaseModel):
-    user: str
+    current_user: str
     project_name: str
     hwset_name: str
     amount_out: int
 
 class CheckInHwsetRequest(BaseModel):
-    user: str
+    current_user: str
     project_name: str
     hwset_name: str
     amount_in: int
 
 class AddUserRequest(BaseModel):
-    user: str
+    current_user: str
     project_name: str
     user_name: str
 
 class RemoveUserRequest(BaseModel):
-    user: str
+    current_user: str
     project_name: str
     user_name: str
-
-class GetAllProjectWithUserNameRequest(BaseModel):
-    user: str
-
