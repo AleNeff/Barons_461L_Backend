@@ -54,7 +54,7 @@ def get_all_users():
     user_list = []
     for each_user in users.find({}, {"_id":0, "username":1}):
         user_list.append({"username": encrypt(each_user["username"], N, DECRYPT)})
-    return user_list
+    return json.dumps(user_list, indent=4, default=json_util.default)
 
 # allows password change for a user by username
 def change_pass(username, new_pass):
