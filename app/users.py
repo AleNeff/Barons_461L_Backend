@@ -3,7 +3,7 @@ from pydantic.types import Json
 from pymongo import MongoClient
 import json
 from bson import json_util
-from .encryption import encrypt
+from encryption import encrypt
 from pydantic import BaseModel
 import ssl
 
@@ -51,9 +51,9 @@ def get_user_on_login(username, password):
 
 # returns dict of ID's => usernames for all users in DB
 def get_all_users():
-    user_list = {}
-    for each_user in users.find({}, {"_id":0, "ID":1, "username":1}):
-        user_list[each_user["ID"]] = {"username": each_user["username"]}
+    user_list = []
+    for each_user in users.find({}, {"_id":0, "username":1}):
+        user_list.append({"username": encrypt(each_user["username"], N, DECRYPT)})
     return user_list
 
 # allows password change for a user by username
@@ -76,4 +76,4 @@ def test_functions():
   print(user_json)
 
 # test_functions()
-get_all_users()
+print(get_all_users())
