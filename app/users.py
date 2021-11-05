@@ -3,7 +3,7 @@ from pydantic.types import Json
 from pymongo import MongoClient
 import json
 from bson import json_util
-from encryption import encrypt
+from .encryption import encrypt
 from pydantic import BaseModel
 import ssl
 
