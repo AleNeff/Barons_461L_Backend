@@ -3,7 +3,7 @@ from pydantic.types import Json
 from pymongo import MongoClient
 import json
 from bson import json_util
-from encryption import encrypt
+from .encryption import encrypt
 from pydantic import BaseModel
 import ssl
 
@@ -76,4 +76,4 @@ def test_functions():
   print(user_json)
 
 # test_functions()
-print(get_all_users())
+# print(get_all_users())
