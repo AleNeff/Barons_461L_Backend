@@ -24,12 +24,16 @@ class User(BaseModel):
     password: str
 
     def post_to_DB(self):
-        post_user(self.ID, self.username, self.password)
+        return post_user(self.ID, self.username, self.password)
 
 # post user to DB with new ID, username, and password
 def post_user(ID=0, username="", password=""):
+    encrypted_username = encrypt(username, N, ENCRYPT)
+    non_unique_username = (users.find({"username": encrypted_username}).count()) > 0
+    if non_unique_username:
+        return -1
     user = {"ID": ID,
-            "username": encrypt(username, N, ENCRYPT),
+            "username": encrypted_username,
             "password": encrypt(password, N, ENCRYPT)}
     users.insert_one(user)
     print(user)
