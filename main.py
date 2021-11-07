@@ -42,8 +42,7 @@ def get_all_users():
 
 @app.post("/user/new_user")
 async def create_user(user: users.User):
-    user.post_to_DB()
-    return {"ID": user.ID, "username": user.username, "password": user.password}
+    return user.post_to_DB()
 
 @app.post("/project/create")
 async def create_project(request: projects.CreateProjectRequest):
