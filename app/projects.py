@@ -114,7 +114,7 @@ def add_user(current_user, project_id, user_name):
     """
     Add user with user_name (str) into project with ID project_id (str)
     """
-    project_dict = PROJECTS_COLLECTION.find_one({"project_name": project_id})
+    project_dict = PROJECTS_COLLECTION.find_one({"project_id": project_id})
     project = Project()
     project.dict_to_class(project_dict)
 
