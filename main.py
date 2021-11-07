@@ -84,7 +84,7 @@ async def check_in_hwset(request: projects.CheckInHwsetRequest):
 async def add_user(request: projects.AddUserRequest):
     return projects.add_user(
         request.current_user,
-        request.project_name,
+        request.project_id,
         request.user_name
     )
 
@@ -92,7 +92,7 @@ async def add_user(request: projects.AddUserRequest):
 async def remove_user(request: projects.RemoveUserRequest):
     return projects.remove_user(
         request.current_user,
-        request.project_name,
+        request.project_id,
         request.user_name
     )
 

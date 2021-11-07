@@ -108,11 +108,11 @@ def check_in_hwset(current_user, project_name, hwset_name, amount_in):
 
     #TODO: return 0 for success
 
-def add_user(current_user, project_name, user_name):
+def add_user(current_user, project_id, user_name):
     """
-    Add user with user_name (str) into project_name (str)
+    Add user with user_name (str) into project with ID project_id (str)
     """
-    project_dict = PROJECTS_COLLECTION.find_one({"project_name": project_name})
+    project_dict = PROJECTS_COLLECTION.find_one({"project_name": project_id})
     project = Project()
     project.dict_to_class(project_dict)
 
@@ -120,14 +120,14 @@ def add_user(current_user, project_name, user_name):
         project.users_list.append(user_name)
 
     PROJECTS_COLLECTION.find_one_and_update(
-        {"project_name": project_name}, 
+        {"project_id": project_id}, 
         {"$set": {"users_list": project.users_list}})
 
-def remove_user(current_user, project_name, user_name):
+def remove_user(current_user, project_id, user_name):
     """
-    Remove user with user_name (str) from project_name (str)
+    Remove user with user_name (str) from project with ID project_id (str)
     """
-    project_dict = PROJECTS_COLLECTION.find_one({"project_name": project_name})
+    project_dict = PROJECTS_COLLECTION.find_one({"project_id": project_id})
     project = Project()
     project.dict_to_class(project_dict)
 
@@ -137,7 +137,7 @@ def remove_user(current_user, project_name, user_name):
         return
 
     PROJECTS_COLLECTION.find_one_and_update(
-        {"project_name": project_name}, 
+        {"project_id": project_id}, 
         {"$set": {"users_list": project.users_list}})
 
 def get_all_projects_with_username(current_user):
@@ -182,10 +182,10 @@ class CheckInHwsetRequest(BaseModel):
 
 class AddUserRequest(BaseModel):
     current_user: str
-    project_name: str
+    project_id: str
     user_name: str
 
 class RemoveUserRequest(BaseModel):
     current_user: str
-    project_name: str
+    project_id: str
     user_name: str
