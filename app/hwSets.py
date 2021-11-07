@@ -77,6 +77,6 @@ def testing_functions():
    # print(out)
     #print(hw_set)
     print(get_all_hardwareSets())
-testing_functions()
+# testing_functions()
 client.close()
 

@@ -1,3 +1,4 @@
+from enum import unique
 from typing import Dict, List
 from pymongo import MongoClient
 from pydantic import BaseModel
@@ -19,15 +20,6 @@ class Project(BaseModel):
     project_owner: str = ""
     users_list: List[str] = []
     checked_out: Dict[str, str] = {}
-
-    # def __init__(self, name, description, id, owner):
-    #     """Constructor for project creation."""
-    #     self.project_name = name
-    #     self.project_description = description
-    #     self.project_id = id
-    #     self.project_owner = owner
-    #     self.users_list = [owner]
-    #     self.checked_out = {}
 
     def dict_to_class(self, dict):
         for key in dict:
@@ -69,7 +61,11 @@ def check_out_hwset(current_user, project_name, hwset_name, amount_out):
 
     Returns 0 for success or -1 for failure (insufficient availability / funds)
     """
-    #use hwSets.py code udpate Hardware Sets collection
+    HWSETS_COLLECTION.find_one_and_update(
+        {"Name": hwset_name}, 
+        {"$inc": {"Availability": -amount_out}}
+    )
+
     #TODO: return -1 for failure
     
     project_dict = PROJECTS_COLLECTION.find_one({"project_name": project_name})
@@ -83,7 +79,8 @@ def check_out_hwset(current_user, project_name, hwset_name, amount_out):
 
     PROJECTS_COLLECTION.find_one_and_update(
         {"project_name": project_name}, 
-        {"$set": {"checked_out": project.checked_out}})
+        {"$set": {"checked_out": project.checked_out}}
+    )
 
     #TODO: return 0 for success
 
@@ -93,7 +90,11 @@ def check_in_hwset(current_user, project_name, hwset_name, amount_in):
 
     Returns 0 for success or -1 for failure (checking in more than amount checked out)
     """
-    #TODO: use hwSets.py code udpate Hardware Sets collection
+    HWSETS_COLLECTION.find_one_and_update(
+        {"Name": hwset_name}, 
+        {"$inc": {"Availability": amount_in}}
+    )
+
     #TODO: return -1 for failure
     
     project_dict = PROJECTS_COLLECTION.find_one({"project_name": project_name})
@@ -104,7 +105,8 @@ def check_in_hwset(current_user, project_name, hwset_name, amount_in):
 
     PROJECTS_COLLECTION.find_one_and_update(
         {"project_name": project_name}, 
-        {"$set": {"checked_out": project.checked_out}})
+        {"$set": {"checked_out": project.checked_out}}
+    )
 
     #TODO: return 0 for success
 
@@ -121,7 +123,8 @@ def add_user(current_user, project_id, user_name):
 
     PROJECTS_COLLECTION.find_one_and_update(
         {"project_id": project_id}, 
-        {"$set": {"users_list": project.users_list}})
+        {"$set": {"users_list": project.users_list}}
+    )
 
 def remove_user(current_user, project_id, user_name):
     """
@@ -138,7 +141,8 @@ def remove_user(current_user, project_id, user_name):
 
     PROJECTS_COLLECTION.find_one_and_update(
         {"project_id": project_id}, 
-        {"$set": {"users_list": project.users_list}})
+        {"$set": {"users_list": project.users_list}}
+    )
 
 def get_all_projects_with_username(current_user):
     """
