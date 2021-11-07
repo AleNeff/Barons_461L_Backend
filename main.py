@@ -4,6 +4,7 @@ import json
 from bson import json_util
 from app import projects
 from app import users
+from app import hwSets
 from typing import Optional
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
@@ -99,4 +100,10 @@ async def remove_user(request: projects.RemoveUserRequest):
 async def get_all_projects_with_username(current_user):
     return projects.get_all_projects_with_username(current_user)
 
-# users.test_functions()
+@app.get("/hwSets/get_all_hardwareSets")
+async def get_all_hardwareSets():
+    return hwSets.get_all_hardwareSets()
+
+@app.get("/hwSets/get_HWSet")
+async def get_hardwareSet(hwSetName):
+    return hwSets.get_HWSET(hwSetName)
