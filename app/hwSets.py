@@ -1,6 +1,7 @@
 from pymongo import MongoClient
 #Providing the mongodb atlas url to connect python to mongodb using pymongo
 import ssl
+from pydantic import BaseModel
 import json
 from bson import json_util
 #Use Cluster0
@@ -70,13 +71,16 @@ def testing_functions():
     #initialize_HardwareSets(200)
     hw_set = get_HWSet("Hardware Set 1")
     print(hw_set)
-    update_capacity("Hardware Set 1", 300)
-    hw_set = get_HWSet("Hardware Set 2")
-    add_HardwareSets("Test", 400)
-    out = remove_HWset("Test")
+    #update_capacity("Hardware Set 1", 300)
+    #hw_set = get_HWSet("Hardware Set 2")
+    #add_HardwareSets("Test", 400)
+    #out = remove_HWset("Test")
    # print(out)
     #print(hw_set)
     print(get_all_hardwareSets())
 # testing_functions()
 client.close()
 
+#request body models
+class findHWSetRequest(BaseModel):
+    hwSet_name: str
