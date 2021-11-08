@@ -81,6 +81,3 @@ def testing_functions():
 # testing_functions()
 client.close()
 
-#request body models
-class findHWSetRequest(BaseModel):
-    hwSet_name: str

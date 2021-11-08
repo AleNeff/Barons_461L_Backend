@@ -104,5 +104,5 @@ async def get_all_hardwareSets():
     return hwSets.get_all_hardwareSets()
 
 @app.get("/hwSets/get_HWSet")
-async def get_hardwareSet(request: hwSets.findHWSetRequest):
-    return hwSets.get_HWSET(request.hwSet_name)
+async def get_hardwareSet(hwSet_name):
+    return hwSets.get_HWSET(hwSet_name)
