@@ -59,56 +59,68 @@ def check_out_hwset(current_user, project_name, hwset_name, amount_out):
     """
     Check out amount_out (int) units of hardware from hwset_name (str) to project_name (str)
 
-    Returns 0 for success or -1 for failure (insufficient availability / funds)
+    Returns 0 for success, 1 limited checkout (insufficient availability), -1 for invalid input
     """
+    result = -1
+    availability = HWSETS_COLLECTION.find_one({"Name": "string"})["Availability"]
+
+    if amount_out < 0: 
+        return result 
+    elif amount_out > availability:
+        amount_out = availability
+        result = 1
+    else:
+        result = 0
+
     HWSETS_COLLECTION.find_one_and_update(
         {"Name": hwset_name}, 
         {"$inc": {"Availability": -amount_out}}
     )
-
-    #TODO: return -1 for failure
     
     project_dict = PROJECTS_COLLECTION.find_one({"project_name": project_name})
     project = Project()
     project.dict_to_class(project_dict)
 
     if hwset_name not in project.checked_out.keys():
-        project.checked_out[hwset_name] = amount_out #TODO: depends on availability
+        project.checked_out[hwset_name] = amount_out 
     else:
-        project.checked_out[hwset_name] += amount_out #TODO: depends on availability
+        project.checked_out[hwset_name] += amount_out 
 
     PROJECTS_COLLECTION.find_one_and_update(
         {"project_name": project_name}, 
         {"$set": {"checked_out": project.checked_out}}
     )
 
-    #TODO: return 0 for success
+    return result
 
 def check_in_hwset(current_user, project_name, hwset_name, amount_in):
     """
     Check in amount_in (int) units of hardware to hwset_name (str) from project_name (str)
 
-    Returns 0 for success or -1 for failure (checking in more than amount checked out)
+    Returns 0 for success, 1 for checking in more than amount checked out, -1 for invalid input
     """
-    HWSETS_COLLECTION.find_one_and_update(
-        {"Name": hwset_name}, 
-        {"$inc": {"Availability": amount_in}}
-    )
-
-    #TODO: return -1 for failure
-    
     project_dict = PROJECTS_COLLECTION.find_one({"project_name": project_name})
     project = Project()
     project.dict_to_class(project_dict)
 
-    project.checked_out[hwset_name] -= amount_in #TODO: depends on availability
+    if amount_in < 0:
+        return -1
+    elif amount_in > project.checked_out[hwset_name]:
+        return 1
+        
+    project.checked_out[hwset_name] -= amount_in 
 
     PROJECTS_COLLECTION.find_one_and_update(
         {"project_name": project_name}, 
         {"$set": {"checked_out": project.checked_out}}
     )
 
-    #TODO: return 0 for success
+    HWSETS_COLLECTION.find_one_and_update(
+        {"Name": hwset_name}, 
+        {"$inc": {"Availability": amount_in}}
+    )
+
+    return 0
 
 def add_user(current_user, project_id, user_name):
     """
