@@ -42,7 +42,7 @@ def add_HardwareSets(name="", capacity=0):
     else:
         setCollection.insert_one(set)
 
-def remove_HWset(name):
+def remove_HWSet(name):
     if setCollection.find_one({"Name":name}) is not None:
         hwSet = setCollection.find_one({"Name": name})
         setCollection.delete_one(hwSet)
@@ -81,7 +81,7 @@ def testing_functions():
     #update_capacity("Hardware Set 1", 300)
     #hw_set = get_HWSet("Hardware Set 2")
     add_HardwareSets("Hardware Set 1", 300)
-    remove_HWset("string")
+    remove_HWSet("string")
     #out = remove_HWset("Test")
    # print(out)
     #print(hw_set)
