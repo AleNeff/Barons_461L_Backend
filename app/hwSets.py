@@ -4,6 +4,7 @@ import ssl
 from pydantic import BaseModel
 import json
 from bson import json_util
+from pymongo.errors import DuplicateKeyError
 #Use Cluster0
 client = MongoClient('mongodb+srv://kpangottil:barons@cluster0.yrjds.mongodb.net/appDB?retryWrites=true&w=majority',ssl_cert_reqs=ssl.CERT_NONE)
 dbname = client["appDB"]
@@ -30,13 +31,17 @@ def initialize_HardwareSets(capacity):
     return
 
 def add_HardwareSets(name="", capacity=0):
+    #Creates a new hardware set and adds it to the database, if a duplicate exists it is not added
     set = {
         "Name": name,
         "Capacity": capacity,
         "Availability":capacity
     }
-    setCollection.insert_one(set)
-    return
+    try:
+        setCollection.insert_one(set)
+        return 0
+    except DuplicateKeyError as e:
+         return -1
 
 def remove_HWset(name):
     if setCollection.find_one({"Name":name}) is not None:
