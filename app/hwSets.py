@@ -37,11 +37,10 @@ def add_HardwareSets(name="", capacity=0):
         "Capacity": capacity,
         "Availability":capacity
     }
-    try:
+    if setCollection.find_one({"Name":name}) is not None:
+        return -1
+    else:
         setCollection.insert_one(set)
-        return 0
-    except DuplicateKeyError as e:
-         return -1
 
 def remove_HWset(name):
     if setCollection.find_one({"Name":name}) is not None:
@@ -81,11 +80,12 @@ def testing_functions():
     print(hw_set)
     #update_capacity("Hardware Set 1", 300)
     #hw_set = get_HWSet("Hardware Set 2")
-    #add_HardwareSets("Test", 400)
+    add_HardwareSets("Hardware Set 1", 300)
+    remove_HWset("string")
     #out = remove_HWset("Test")
    # print(out)
     #print(hw_set)
     print(get_all_hardwareSets())
-testing_functions()
+#testing_functions()
 client.close()
 
