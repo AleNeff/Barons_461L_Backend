@@ -9,6 +9,11 @@ client = MongoClient('mongodb+srv://kpangottil:barons@cluster0.yrjds.mongodb.net
 dbname = client["appDB"]
 setCollection = dbname["Hardware Sets"]
 
+class HWSet(BaseModel):
+    Name: str
+    Capacity: int
+    Availability: int
+
 def initialize_HardwareSets(capacity):
     HWSet1 = {
     "Name": "Hardware Set 1",
@@ -48,13 +53,11 @@ def get_HWSet(name):
 #returns all hardware sets
 
 def get_all_hardwareSets():
-    """
-    Get all projects from MongoDB with username user (str)
-    """
     hwset_list = setCollection.find()
     result = []
     for each_set in hwset_list:
-        result.append(each_set)
+        set = HWSet(**each_set)
+        result.append(set)
     return result
 
 def update_capacity(name, count):
@@ -78,6 +81,6 @@ def testing_functions():
    # print(out)
     #print(hw_set)
     print(get_all_hardwareSets())
-# testing_functions()
+testing_functions()
 client.close()
 

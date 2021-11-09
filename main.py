@@ -99,10 +99,10 @@ async def remove_user(request: projects.RemoveUserRequest):
 async def get_all_projects_with_username(current_user):
     return projects.get_all_projects_with_username(current_user)
 
-@app.get("/hwSets/get_all_hardwareSets")
+@app.get("/hwSets/get_all")
 async def get_all_hardwareSets():
     return hwSets.get_all_hardwareSets()
 
 @app.get("/hwSets/get_HWSet")
 async def get_hardwareSet(hwSet_name):
-    return hwSets.get_HWSET(hwSet_name)
+    return hwSets.get_HWSet(hwSet_name)
