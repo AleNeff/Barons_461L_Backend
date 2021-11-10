@@ -48,21 +48,35 @@ def create_project(name, description, id, owner):
         return -1
 
 def delete_project_by_name(current_user, name):
-    """Delete a project by project name (str)"""
+    """
+    Delete a project by project name (str)
+    Note: Only project owners may delete project
+
+    Return 0 for success, -1 for failure (not owner)
+    """
+    project_dict = PROJECTS_COLLECTION.find_one({"project_name": project_name})
+    project = Project()
+    project.dict_to_class(project_dict)
+
     PROJECTS_COLLECTION.delete_one({"project_name": name})
 
 def delete_project_by_id(current_user, id):
-    """Delete a project by project id (str)"""
+    """
+    Delete a project by project id (str)
+    Note: Only project owners may delete project
+
+    Return 0 for success, -1 for failure (not owner)
+    """
     PROJECTS_COLLECTION.delete_one({"project_id": id})
 
-def check_out_hwset(current_user, project_name, hwset_name, amount_out):
+def check_out_hwset(current_user, project_id, hwset_name, amount_out):
     """
-    Check out amount_out (int) units of hardware from hwset_name (str) to project_name (str)
+    Check out amount_out (int) units of hardware from hwset_name (str) to project_id (str)
 
     Returns 0 for success, 1 limited checkout (insufficient availability), -1 for invalid input
     """
     result = -1
-    availability = HWSETS_COLLECTION.find_one({"Name": "string"})["Availability"]
+    availability = HWSETS_COLLECTION.find_one({"Name": hwset_name})["Availability"]
 
     if amount_out < 0: 
         return result 
@@ -77,7 +91,7 @@ def check_out_hwset(current_user, project_name, hwset_name, amount_out):
         {"$inc": {"Availability": -amount_out}}
     )
     
-    project_dict = PROJECTS_COLLECTION.find_one({"project_name": project_name})
+    project_dict = PROJECTS_COLLECTION.find_one({"project_id": project_id})
     project = Project()
     project.dict_to_class(project_dict)
 
@@ -87,19 +101,19 @@ def check_out_hwset(current_user, project_name, hwset_name, amount_out):
         project.checked_out[hwset_name] += amount_out 
 
     PROJECTS_COLLECTION.find_one_and_update(
-        {"project_name": project_name}, 
+        {"project_id": project_id}, 
         {"$set": {"checked_out": project.checked_out}}
     )
 
     return result
 
-def check_in_hwset(current_user, project_name, hwset_name, amount_in):
+def check_in_hwset(current_user, project_id, hwset_name, amount_in):
     """
-    Check in amount_in (int) units of hardware to hwset_name (str) from project_name (str)
+    Check in amount_in (int) units of hardware to hwset_name (str) from project_id6 (str)
 
     Returns 0 for success, 1 for checking in more than amount checked out, -1 for invalid input
     """
-    project_dict = PROJECTS_COLLECTION.find_one({"project_name": project_name})
+    project_dict = PROJECTS_COLLECTION.find_one({"project_id": project_id})
     project = Project()
     project.dict_to_class(project_dict)
 
@@ -111,7 +125,7 @@ def check_in_hwset(current_user, project_name, hwset_name, amount_in):
     project.checked_out[hwset_name] -= amount_in 
 
     PROJECTS_COLLECTION.find_one_and_update(
-        {"project_name": project_name}, 
+        {"project_id": project_id}, 
         {"$set": {"checked_out": project.checked_out}}
     )
 
@@ -186,13 +200,13 @@ class DeleteProjectByIdRequest(BaseModel):
 
 class CheckOutHwsetRequest(BaseModel):
     current_user: str
-    project_name: str
+    project_id: str
     hwset_name: str
     amount_out: int
 
 class CheckInHwsetRequest(BaseModel):
     current_user: str
-    project_name: str
+    project_id: str
     hwset_name: str
     amount_in: int
 
