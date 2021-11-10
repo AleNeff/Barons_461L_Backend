@@ -75,7 +75,7 @@ def delete_project_by_id(current_user, id):
     project = Project()
     project.dict_to_class(project_dict)
 
-    if current_user == project.project_owner:
+    if current_user != project.project_owner:
         return -1
 
     PROJECTS_COLLECTION.delete_one({"project_id": id})
