@@ -54,11 +54,15 @@ def delete_project_by_name(current_user, name):
 
     Return 0 for success, -1 for failure (not owner)
     """
-    project_dict = PROJECTS_COLLECTION.find_one({"project_name": project_name})
+    project_dict = PROJECTS_COLLECTION.find_one({"project_name": name})
     project = Project()
     project.dict_to_class(project_dict)
 
+    if current_user == project.project_owner:
+        return -1
+
     PROJECTS_COLLECTION.delete_one({"project_name": name})
+    return 0
 
 def delete_project_by_id(current_user, id):
     """
@@ -67,7 +71,15 @@ def delete_project_by_id(current_user, id):
 
     Return 0 for success, -1 for failure (not owner)
     """
+    project_dict = PROJECTS_COLLECTION.find_one({"project_id": id})
+    project = Project()
+    project.dict_to_class(project_dict)
+
+    if current_user == project.project_owner:
+        return -1
+
     PROJECTS_COLLECTION.delete_one({"project_id": id})
+    return 0
 
 def check_out_hwset(current_user, project_id, hwset_name, amount_out):
     """
@@ -119,7 +131,7 @@ def check_in_hwset(current_user, project_id, hwset_name, amount_in):
 
     if amount_in < 0:
         return -1
-    elif amount_in > project.checked_out[hwset_name]:
+    elif hwset_name not in project.checked_out.keys() or amount_in > project.checked_out[hwset_name]:
         return 1
         
     project.checked_out[hwset_name] -= amount_in 
