@@ -41,6 +41,7 @@ def add_HardwareSets(name="", capacity=0):
         return -1
     else:
         setCollection.insert_one(set)
+        return 0
 
 def remove_HWSet(name):
     if setCollection.find_one({"Name":name}) is not None:
