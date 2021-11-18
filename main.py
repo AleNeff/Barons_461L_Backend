@@ -65,7 +65,7 @@ async def delete_project_by_id(request: projects.DeleteProjectByIdRequest):
 async def check_out_hwset(request: projects.CheckOutHwsetRequest):
     return projects.check_out_hwset(
         request.current_user,
-        request.project_name,
+        request.project_id,
         request.hwset_name,
         request.amount_out
     )
@@ -74,7 +74,7 @@ async def check_out_hwset(request: projects.CheckOutHwsetRequest):
 async def check_in_hwset(request: projects.CheckInHwsetRequest):
     return projects.check_in_hwset(
         request.current_user,
-        request.project_name,
+        request.project_id,
         request.hwset_name,
         request.amount_in
     )
