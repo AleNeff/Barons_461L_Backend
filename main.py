@@ -50,8 +50,7 @@ async def create_project(request: projects.CreateProjectRequest):
         request.project_name, 
         request.project_description, 
         request.project_id, 
-        request.project_owner,
-        request.funds
+        request.project_owner
     )
 
 @app.post("/project/delete_name")
@@ -108,6 +107,9 @@ async def get_all_hardwareSets():
 async def get_hardwareSet(hwSet_name):
     return hwSets.get_HWSet(hwSet_name)
 
-@app.post("/hwSets/add_HardwareSets")
-async def create_HardwareSet(hwset: hwSets.HWSet):
-    return hwset.add_HardwareSet(hwset.Name, hwset.Capacity)
+@app.get("/hwSets/add_HardwareSets")
+async def add_HardwareSets(hwSet_name, capacity):
+    return hwSets.add_HardwareSets(hwSet_name, capacity)
+    #async def create_HardwareSet(hwset: hwSets.HWSet):
+    #return hwset.add_HardwareSet(hwset.Name, hwset.Capacity)
+

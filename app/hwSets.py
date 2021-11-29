@@ -14,8 +14,8 @@ class HWSet(BaseModel):
     Name: str
     Capacity: int
     Availability: int
-    def add_HardwareSet(self):
-        return add_HardwareSets(self.Name, self.Capacity)
+    #def add_HardwareSet(self):
+        #return add_HardwareSets(self.Name, self.Capacity)
 
 def initialize_HardwareSets(capacity):
     HWSet1 = {
