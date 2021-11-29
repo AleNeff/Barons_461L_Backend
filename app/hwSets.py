@@ -36,8 +36,8 @@ def add_HardwareSets(name="", capacity=0):
     #Creates a new hardware set and adds it to the database, if a duplicate exists it is not added
     set = {
         "Name": name,
-        "Capacity": capacity,
-        "Availability":capacity
+        "Capacity": int(capacity),
+        "Availability": int(capacity)
     }
     if setCollection.find_one({"Name":name}) is not None:
         return -1
