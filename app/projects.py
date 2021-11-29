@@ -18,6 +18,7 @@ class Project(BaseModel):
     project_description: str = ""
     project_id: str = ""
     project_owner: str = ""
+    total_funds: int = 0
     users_list: List[str] = []
     checked_out: Dict[str, str] = {}
 
@@ -26,7 +27,7 @@ class Project(BaseModel):
             if key != "_id":
                 setattr(self, key, dict[key])
 
-def create_project(name, description, id, owner):
+def create_project(name, description, id, owner, funds):
     """
     Creates a new project and adds it to database.
 
@@ -37,6 +38,7 @@ def create_project(name, description, id, owner):
         "project_description": description,
         "project_id": id,
         "project_owner": owner,
+        "total_funds": funds,
         "users_list": [owner],
         "checked_out": {}
     }
@@ -90,7 +92,11 @@ def check_out_hwset(current_user, project_id, hwset_name, amount_out):
     result = -1
     availability = HWSETS_COLLECTION.find_one({"Name": hwset_name})["Availability"]
 
-    if amount_out < 0: 
+    project_dict = PROJECTS_COLLECTION.find_one({"project_id": project_id})
+    project = Project()
+    project.dict_to_class(project_dict)
+
+    if amount_out < 0 or int(project.total_funds) < int(amount_out): 
         return result 
     elif amount_out > availability:
         amount_out = availability
@@ -102,10 +108,6 @@ def check_out_hwset(current_user, project_id, hwset_name, amount_out):
         {"Name": hwset_name}, 
         {"$inc": {"Availability": -amount_out}}
     )
-    
-    project_dict = PROJECTS_COLLECTION.find_one({"project_id": project_id})
-    project = Project()
-    project.dict_to_class(project_dict)
 
     if hwset_name not in project.checked_out.keys():
         project.checked_out[hwset_name] = amount_out 
@@ -114,7 +116,8 @@ def check_out_hwset(current_user, project_id, hwset_name, amount_out):
 
     PROJECTS_COLLECTION.find_one_and_update(
         {"project_id": project_id}, 
-        {"$set": {"checked_out": project.checked_out}}
+        {"$set": {"checked_out": project.checked_out},
+        "$inc": {"total_funds": -amount_out}}
     )
 
     return result
@@ -138,7 +141,8 @@ def check_in_hwset(current_user, project_id, hwset_name, amount_in):
 
     PROJECTS_COLLECTION.find_one_and_update(
         {"project_id": project_id}, 
-        {"$set": {"checked_out": project.checked_out}}
+        {"$set": {"checked_out": project.checked_out},
+        "$inc": {"total_funds": amount_in}}
     )
 
     HWSETS_COLLECTION.find_one_and_update(
@@ -201,6 +205,7 @@ class CreateProjectRequest(BaseModel):
     project_description: str
     project_id: str
     project_owner: str
+    funds: int
 
 class DeleteProjectByNameRequest(BaseModel):
     current_user: str

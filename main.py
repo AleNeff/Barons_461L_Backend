@@ -50,7 +50,8 @@ async def create_project(request: projects.CreateProjectRequest):
         request.project_name, 
         request.project_description, 
         request.project_id, 
-        request.project_owner
+        request.project_owner,
+        request.funds
     )
 
 @app.post("/project/delete_name")
