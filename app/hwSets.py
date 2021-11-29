@@ -77,16 +77,16 @@ def update_capacity(name, count):
 
 def testing_functions():
     #initialize_HardwareSets(200)
-    hw_set = get_HWSet("Hardware Set 1")
-    print(hw_set)
+    #hw_set = get_HWSet("Hardware Set 1")
+    #print(hw_set)
     #update_capacity("Hardware Set 1", 300)
     #hw_set = get_HWSet("Hardware Set 2")
-    add_HardwareSets("Hardware Set 1", 300)
-    remove_HWSet("string")
+    add_HardwareSets("Hardware Set Test", 300)
+    #remove_HWSet("string")
     #out = remove_HWset("Test")
    # print(out)
     #print(hw_set)
     print(get_all_hardwareSets())
-#testing_functions()
+testing_functions()
 client.close()
 

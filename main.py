@@ -107,6 +107,6 @@ async def get_all_hardwareSets():
 async def get_hardwareSet(hwSet_name):
     return hwSets.get_HWSet(hwSet_name)
 
-@app.get("/hwSets/add_HardwareSets")
+@app.post("/hwSets/add_HardwareSets")
 async def add_HardwareSets(hwSet_name, capacity):
     return hwSets.add_HardwareSets(hwSet_name, capacity)
