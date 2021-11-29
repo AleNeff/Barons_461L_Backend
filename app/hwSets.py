@@ -13,7 +13,6 @@ setCollection = dbname["Hardware Sets"]
 class HWSet(BaseModel):
     Name: str
     Capacity: int
-    Availability: int
     def add_HardwareSet(self):
         return add_HardwareSets(self.Name, self.Capacity)
 
