@@ -110,4 +110,4 @@ async def get_hardwareSet(hwSet_name):
 
 @app.post("/hwSets/add_HardwareSets")
 async def create_HardwareSet(hwset: hwSets.HWSet):
-    return hwset.add_HardwareSets(hwset.Name, hwset.Capacity)
+    return hwset.add_HardwareSet(hwset.Name, hwset.Capacity)
